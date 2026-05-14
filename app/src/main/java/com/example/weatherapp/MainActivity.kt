@@ -1,47 +1,73 @@
 package com.example.weatherapp
 
+import android.app.Activity
 import android.os.Bundle
+
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+
 import androidx.compose.runtime.Composable
+
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+
 import com.example.weatherapp.ui.theme.WeatherAPPTheme
 
+
+
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
         setContent {
+
             WeatherAPPTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+
+                HomePage()
+
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun HomePage(modifier: Modifier = Modifier) {
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    WeatherAPPTheme {
-        Greeting("Android")
+    val activity = LocalContext.current as Activity
+
+    Column(
+        modifier = modifier
+            .padding(24.dp)
+            .fillMaxSize()
+    ) {
+
+        Text(
+            text = "Bem-vindo ao sistema!",
+            fontSize = 24.sp
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+
+        // Botão sair
+
+
+        Button(
+            onClick = {
+
+                activity.finish()
+
+            }
+        ) {
+
+            Text("Sair")
+
+        }
     }
 }
