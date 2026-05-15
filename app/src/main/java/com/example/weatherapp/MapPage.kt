@@ -36,7 +36,7 @@ fun MapPage(modifier: Modifier = Modifier.Companion) {
     ) {
 
         Text(
-            text = "Favoritas",
+            text = "Mapa",
             fontWeight = FontWeight.Bold,
             color = Color.White,
             modifier = modifier.align(CenterHorizontally),
