@@ -19,8 +19,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.toMutableStateList
+//import androidx.compose.runtime.remember
+//import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -29,9 +29,12 @@ import androidx.compose.ui.unit.sp
 import com.example.weatherapp.model.City
 
 @Composable
-//atividade 3 passo 4 e 5
-fun ListPage(modifier: Modifier = Modifier) {
-    val cityList = remember { getCities().toMutableStateList() }
+//Passo 3 da parte 2
+fun ListPage(
+    modifier: Modifier = Modifier,
+    viewModel: MainViewModel // Adicionado aqui
+) {
+    val cityList = viewModel.cities // Pega a lista do ViewModel
     val activity = LocalContext.current as Activity
 
     LazyColumn(
@@ -43,20 +46,16 @@ fun ListPage(modifier: Modifier = Modifier) {
             CityItem(
                 city = city,
                 onClose = {
-                    // Passo 5 Toast para fechar
-                    Toast.makeText(activity, "Fechar clicado: ${city.name}", Toast.LENGTH_SHORT).show()
+                    // Passo 4: Agora o botão X remove a cidade
+                    viewModel.remove(city)
+                    Toast.makeText(activity, "Removido: ${city.name}", Toast.LENGTH_SHORT).show()
                 },
                 onClick = {
-                    // Passo 5 Toast para clicar em cidade
                     Toast.makeText(activity, "Cidade clicada: ${city.name}", Toast.LENGTH_SHORT).show()
                 }
             )
         }
     }
-}
-//atividade 3 passo 2
-private fun getCities() = List(20) { i ->
-    City(name = "Cidade $i", weather = "Carregando clima...")
 }
 
 //atividade 3 passo 3

@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.sp
 
 
 @Composable
-fun HomePage(modifier: Modifier = Modifier.Companion) {
+fun HomePage(modifier: Modifier = Modifier.Companion, viewModel: MainViewModel) {
 
 
 
