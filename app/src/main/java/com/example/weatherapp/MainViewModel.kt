@@ -3,6 +3,7 @@ package com.example.weatherapp
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import com.example.weatherapp.model.City
+import com.google.android.gms.maps.model.LatLng
 
 class MainViewModel : ViewModel() {
     // Lista  interna
@@ -18,8 +19,8 @@ class MainViewModel : ViewModel() {
     }
 
     // Função para adicionar uma cidade
-    fun add(name: String) {
-        _cities.add(City(name = name))
+    fun add(name: String, location: LatLng? = null) {
+        _cities.add(City(name = name, location = location))
     }
 }
 
