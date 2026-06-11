@@ -25,6 +25,8 @@ import com.example.weatherapp.ui.nav.BottomNavItem
 import com.example.weatherapp.ui.nav.MainNavHost
 
 import com.example.weatherapp.ui.theme.WeatherAPPTheme
+import androidx.compose.runtime.*
+import com.example.weatherapp.ui.CityDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
@@ -38,8 +40,30 @@ class MainActivity : ComponentActivity() {
             val mainViewModel: MainViewModel = viewModel() //passo 6 atividade 3
             val navController =
                 rememberNavController()
+            var showDialog by remember {
+                mutableStateOf(false)
+            }
 
             WeatherAPPTheme {
+
+                if (showDialog) {
+
+                    CityDialog(
+
+                        onDismiss = {
+                            showDialog = false
+                        },
+
+                        onConfirm = { city ->
+
+                            if (city.isNotBlank()) {
+                                mainViewModel.add(city)
+                            }
+
+                            showDialog = false
+                        }
+                    )
+                }
 
                 Scaffold(
 
@@ -95,7 +119,10 @@ class MainActivity : ComponentActivity() {
                     floatingActionButton = {
 
                         FloatingActionButton(
-                            onClick = { }
+                            onClick = {
+                                showDialog = true
+                            }
+
                         ) {
 
                             Icon(
