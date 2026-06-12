@@ -32,6 +32,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.weatherapp.ui.CityDialog
 import com.example.weatherapp.ui.nav.Route
 import androidx.navigation.NavDestination.Companion.hasRoute
+import com.google.firebase.auth.FirebaseAuth
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -93,7 +95,7 @@ class MainActivity : ComponentActivity() {
                                     onClick = {
 
 
-
+                                        FirebaseAuth.getInstance().signOut()
                                         finish()
 
                                     }

@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 import com.example.weatherapp.ui.theme.WeatherAPPTheme
+import com.google.firebase.auth.FirebaseAuth
 
 
 
@@ -160,16 +161,32 @@ fun RegisterPage(modifier: Modifier = Modifier) {
 
                 onClick = {
 
-                    Toast.makeText(
-                        activity,
-                        "Registro realizado!",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    FirebaseAuth.getInstance()
+                        .createUserWithEmailAndPassword(
+                            email,
+                            password
+                        )
+                        .addOnCompleteListener(activity) { task ->
 
+                            if (task.isSuccessful) {
 
+                                Toast.makeText(
+                                    activity,
+                                    "Registro OK!",
+                                    Toast.LENGTH_LONG
+                                ).show()
 
-                    activity.finish()
+                                activity.finish()
 
+                            } else {
+
+                                Toast.makeText(
+                                    activity,
+                                    "Registro FALHOU!",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }
                 },
 
                 enabled = isValid

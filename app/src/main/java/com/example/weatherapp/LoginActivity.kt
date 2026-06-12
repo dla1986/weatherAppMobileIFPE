@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 import com.example.weatherapp.ui.theme.WeatherAPPTheme
+import com.google.firebase.auth.FirebaseAuth
 
 
 class LoginActivity : ComponentActivity() {
@@ -112,24 +113,41 @@ fun LoginPage(modifier: Modifier = Modifier) {
             Button(
                 onClick = {
 
-                    Toast.makeText(
-                        activity,
-                        "Login realizado!",
-                        Toast.LENGTH_LONG
-                    ).show()
-
-                    //mainactiviry
-
-                    activity.startActivity(
-                        Intent(
-                            activity,
-                            MainActivity::class.java
+                    FirebaseAuth.getInstance()
+                        .signInWithEmailAndPassword(
+                            email,
+                            password
                         )
-                    )
+                        .addOnCompleteListener(activity) { task ->
+
+                            if (task.isSuccessful) {
+
+                                activity.startActivity(
+                                    Intent(
+                                        activity,
+                                        MainActivity::class.java
+                                    ).setFlags(
+                                        Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                    )
+                                )
+
+                                Toast.makeText(
+                                    activity,
+                                    "Login OK!",
+                                    Toast.LENGTH_LONG
+                                ).show()
+
+                            } else {
+
+                                Toast.makeText(
+                                    activity,
+                                    "Login FALHOU!",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }
 
                 },
-
-
 
                 enabled = isValid
 
