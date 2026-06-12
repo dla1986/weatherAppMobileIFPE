@@ -33,6 +33,7 @@ import com.example.weatherapp.ui.CityDialog
 import com.example.weatherapp.ui.nav.Route
 import androidx.navigation.NavDestination.Companion.hasRoute
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
 
@@ -90,6 +91,8 @@ class MainActivity : ComponentActivity() {
 
                                 IconButton(
                                     onClick = {
+
+
 
                                         finish()
 

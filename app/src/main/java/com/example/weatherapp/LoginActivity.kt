@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 
 import com.example.weatherapp.ui.theme.WeatherAPPTheme
 
+
 class LoginActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

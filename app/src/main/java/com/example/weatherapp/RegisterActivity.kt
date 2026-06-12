@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import com.example.weatherapp.ui.theme.WeatherAPPTheme
 
 
+
 class RegisterActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +61,7 @@ fun RegisterPage(modifier: Modifier = Modifier) {
     }
 
     val activity = LocalContext.current as Activity
+
 
 
     // Validações
