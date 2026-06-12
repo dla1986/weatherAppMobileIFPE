@@ -126,9 +126,7 @@ fun LoginPage(modifier: Modifier = Modifier) {
                                     Intent(
                                         activity,
                                         MainActivity::class.java
-                                    ).setFlags(
-                                        Intent.FLAG_ACTIVITY_SINGLE_TOP
-                                    )
+                                    ).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                                 )
 
                                 Toast.makeText(
