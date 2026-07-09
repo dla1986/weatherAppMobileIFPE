@@ -1,6 +1,7 @@
 package com.example.weatherapp
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 
@@ -175,7 +176,9 @@ fun RegisterPage(modifier: Modifier = Modifier) {
                                     "Registro OK!",
                                     Toast.LENGTH_LONG
                                 ).show()
-
+                                val intent = Intent(activity, MainActivity::class.java)
+                                activity.startActivity(intent)
+                                activity.finish()
 
 
                             } else {
