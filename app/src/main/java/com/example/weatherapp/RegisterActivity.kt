@@ -19,6 +19,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.weatherapp.db.fb.FBDatabase
+import com.example.weatherapp.db.fb.toFBUser
+import com.example.weatherapp.model.User
 
 import com.example.weatherapp.ui.theme.WeatherAPPTheme
 import com.google.firebase.auth.FirebaseAuth
@@ -176,6 +179,8 @@ fun RegisterPage(modifier: Modifier = Modifier) {
                                     "Registro OK!",
                                     Toast.LENGTH_LONG
                                 ).show()
+                                FBDatabase().register(User(name, email).toFBUser())
+
                                 val intent = Intent(activity, MainActivity::class.java)
                                 activity.startActivity(intent)
                                 activity.finish()

@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 
 import androidx.compose.foundation.layout.Box
@@ -32,6 +33,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.weatherapp.ui.CityDialog
 import com.example.weatherapp.ui.nav.Route
 import androidx.navigation.NavDestination.Companion.hasRoute
+import com.example.weatherapp.db.fb.FBDatabase
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -39,12 +41,19 @@ import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterial3Api::class)
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-
+        enableEdgeToEdge()
         setContent {
+
+
+            val fbDB = remember { FBDatabase() }
+            val viewModel : MainViewModel = viewModel(
+                factory = MainViewModelFactory(fbDB)
+            )
 
             val mainViewModel: MainViewModel = viewModel() //passo 6 atividade 3
             val navController =
