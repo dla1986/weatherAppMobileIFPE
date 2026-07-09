@@ -54,6 +54,7 @@ dependencies {
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.firebase.firestore)
     implementation(libs.googleid)
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -74,5 +75,6 @@ dependencies {
     //firebase
     implementation(platform("com.google.firebase:firebase-bom:34.0.0"))
     implementation("com.google.firebase:firebase-auth")
+
 
 }

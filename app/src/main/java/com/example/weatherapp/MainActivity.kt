@@ -36,6 +36,7 @@ import com.google.firebase.auth.FirebaseAuth
 
 
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
 
@@ -85,7 +86,8 @@ class MainActivity : ComponentActivity() {
 
                             title = {
 
-                                Text("Bem-vindo!")
+                                val name = mainViewModel.user?.name?:"[carregando...]"
+                                Text("Bem-vindo/a! $name")
 
                             },
 
