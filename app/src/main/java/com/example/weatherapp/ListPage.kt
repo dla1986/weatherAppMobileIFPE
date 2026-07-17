@@ -40,7 +40,6 @@ fun ListPage(
             .fillMaxSize()
             .padding(8.dp)
     ) {
-
         items(cityList, key = { it.name }) { city ->
             CityItem(
                 city = city,
@@ -52,6 +51,9 @@ fun ListPage(
                     }
                 },
                 onClick = {
+
+                    viewModel.city = city.name
+
                     activity?.let {
                         Toast.makeText(it, "Cidade clicada: ${city.name}", Toast.LENGTH_SHORT).show()
                     }
@@ -61,7 +63,6 @@ fun ListPage(
     }
 }
 
-
 @Composable
 fun CityItem(
     city: City,
@@ -70,7 +71,6 @@ fun CityItem(
     onClose: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-
     val desc = if (weather == Weather.LOADING) "Carregando clima..." else weather.desc
 
     Row(
