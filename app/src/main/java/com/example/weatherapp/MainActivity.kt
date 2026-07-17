@@ -33,6 +33,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.weatherapp.ui.CityDialog
 import com.example.weatherapp.ui.nav.Route
 import androidx.navigation.NavDestination.Companion.hasRoute
+import com.example.weatherapp.api.WeatherService
 import com.example.weatherapp.db.fb.FBDatabase
 import com.google.firebase.auth.FirebaseAuth
 
@@ -51,11 +52,12 @@ class MainActivity : ComponentActivity() {
 
 
             val fbDB = remember { FBDatabase() }
+            val weatherService = remember { WeatherService() }
             val viewModel : MainViewModel = viewModel(
-                factory = MainViewModelFactory(fbDB)
+                factory = MainViewModelFactory(fbDB, weatherService)
             )
 
-            val mainViewModel: MainViewModel = viewModel() //passo 6 atividade 3
+           // val mainViewModel: MainViewModel = viewModel() //passo 6 atividade 3
             val navController =
                 rememberNavController()
             var showDialog by remember {
@@ -79,7 +81,7 @@ class MainActivity : ComponentActivity() {
                         onConfirm = { city ->
 
                             if (city.isNotBlank()) {
-                                mainViewModel.add(city)
+                                viewModel.addCity(city)
                             }
 
                             showDialog = false
@@ -95,7 +97,7 @@ class MainActivity : ComponentActivity() {
 
                             title = {
 
-                                val name = mainViewModel.user?.name?:"[carregando...]"
+                                val name = viewModel.user?.name?:"[carregando...]"
                                 Text("Bem-vindo/a! $name")
 
                             },
@@ -157,7 +159,7 @@ class MainActivity : ComponentActivity() {
 
                         MainNavHost(
                             navController = navController,
-                            viewModel = mainViewModel
+                            viewModel = viewModel
                         )
                     }
                 }
