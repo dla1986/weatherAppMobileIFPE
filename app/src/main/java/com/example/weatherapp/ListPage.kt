@@ -19,53 +19,60 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-//import androidx.compose.runtime.remember
-//import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherapp.model.City
+import com.example.weatherapp.model.Weather
 
 @Composable
-//Passo 3 da parte 2
 fun ListPage(
     modifier: Modifier = Modifier,
-    viewModel: MainViewModel // Adicionado aqui
+    viewModel: MainViewModel
 ) {
-    val cityList = viewModel.cities // Pega a lista do ViewModel
-    val activity = LocalContext.current as Activity
+    val cityList = viewModel.cities
+    val activity = LocalContext.current as? Activity
 
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
             .padding(8.dp)
     ) {
+
         items(cityList, key = { it.name }) { city ->
             CityItem(
                 city = city,
+                weather = viewModel.weather(city.name),
                 onClose = {
-                    // Passo 4: Agora o botão X remove a cidade
                     viewModel.remove(city)
-                    Toast.makeText(activity, "Removido: ${city.name}", Toast.LENGTH_SHORT).show()
+                    activity?.let {
+                        Toast.makeText(it, "Removido: ${city.name}", Toast.LENGTH_SHORT).show()
+                    }
                 },
                 onClick = {
-                    Toast.makeText(activity, "Cidade clicada: ${city.name}", Toast.LENGTH_SHORT).show()
+                    activity?.let {
+                        Toast.makeText(it, "Cidade clicada: ${city.name}", Toast.LENGTH_SHORT).show()
+                    }
                 }
             )
         }
     }
 }
 
-//atividade 3 passo 3
+
 @Composable
 fun CityItem(
     city: City,
+    weather: Weather,
     onClick: () -> Unit,
     onClose: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+
+    val desc = if (weather == Weather.LOADING) "Carregando clima..." else weather.desc
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -86,7 +93,7 @@ fun CityItem(
             )
             Text(
                 modifier = Modifier,
-                text = city.weather ?: "Carregando clima...",
+                text = desc,
                 fontSize = 16.sp
             )
         }

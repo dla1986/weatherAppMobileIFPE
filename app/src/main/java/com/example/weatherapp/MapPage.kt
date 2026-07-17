@@ -21,6 +21,7 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.example.weatherapp.model.Weather
 
 @Composable
 fun MapPage(
@@ -28,11 +29,9 @@ fun MapPage(
     viewModel: MainViewModel
 ) {
 
-
     val context = LocalContext.current
 
     val hasLocationPermission by remember {
-
         mutableStateOf(
             ContextCompat.checkSelfPermission(
                 context,
@@ -40,7 +39,6 @@ fun MapPage(
             ) == PackageManager.PERMISSION_GRANTED
         )
     }
-
 
     val recife = remember {
         MarkerState(
@@ -60,31 +58,20 @@ fun MapPage(
         )
     }
 
-
     val camPosState = rememberCameraPositionState()
 
     GoogleMap(
-
         modifier = modifier,
-
         cameraPositionState = camPosState,
-
-
         properties = MapProperties(
             isMyLocationEnabled = hasLocationPermission
         ),
-
         uiSettings = MapUiSettings(
             myLocationButtonEnabled = true
         ),
-
-
         onMapClick = { location ->
-
             viewModel.addCity(location)
-
         }
-
     ) {
 
         // Recife
@@ -119,15 +106,17 @@ fun MapPage(
 
 
         viewModel.cities.forEach { city ->
-
             if (city.location != null) {
 
+                val weather = viewModel.weather(city.name)
+
+
+                val desc = if (weather == Weather.LOADING) "Carregando clima..." else weather.desc
+
                 Marker(
-                    state = MarkerState(
-                        position = city.location
-                    ),
+                    state = MarkerState(position = city.location),
                     title = city.name,
-                    snippet = city.location.toString()
+                    snippet = desc
                 )
             }
         }
