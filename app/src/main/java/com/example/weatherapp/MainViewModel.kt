@@ -97,7 +97,11 @@ class MainViewModel (private val db: FBDatabase, private val service: WeatherSer
 
     fun forecast (name: String) = _forecast.getOrPut(name) {
         loadForecast(name)
-        emptyList() // return
+        emptyList()
+    }
+
+    fun update(city: City) {
+        db.update(city.toFBCity())
     }
 
     private fun loadForecast(name: String) {

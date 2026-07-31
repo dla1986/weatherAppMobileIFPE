@@ -1,6 +1,5 @@
 package com.example.weatherapp
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -8,19 +7,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Icon
-import androidx.compose.material3.SegmentedButtonDefaults.Icon
-
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,7 +23,6 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -36,23 +30,31 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.weatherapp.model.Forecast
 import java.text.DecimalFormat
-
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.outlined.Notifications
 
 @Composable
-fun HomePage(modifier: Modifier = Modifier,viewModel: MainViewModel) {
+fun HomePage(modifier: Modifier = Modifier, viewModel: MainViewModel) {
     Column {
         if (viewModel.city == null) {
-            Column( modifier = modifier.fillMaxSize()
-                .background(Color.Blue).wrapContentSize(Alignment.Center)
+            Column(
+                modifier = modifier
+                    .fillMaxSize()
+                    .background(Color.Blue)
+                    .wrapContentSize(Alignment.Center)
             ) {
-                Text( text = "Selecione uma cidade!",
-                    fontWeight = FontWeight.Bold, color = Color.White,
+                Text(
+                    text = "Selecione uma cidade!",
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
                     modifier = Modifier.align(CenterHorizontally),
-                    textAlign = TextAlign.Center, fontSize = 28.sp )
+                    textAlign = TextAlign.Center,
+                    fontSize = 28.sp
+                )
             }
         } else {
-            Row {
-                AsyncImage( // Substitui o Icon
+            Row(modifier = modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                AsyncImage(
                     model = viewModel.weather(viewModel.city!!).imgUrl,
                     modifier = modifier.size(140.dp),
                     error = painterResource(id = R.drawable.loading),
@@ -60,16 +62,43 @@ fun HomePage(modifier: Modifier = Modifier,viewModel: MainViewModel) {
                 )
                 Column {
                     Spacer(modifier = modifier.size(12.dp))
-                    Text( text = viewModel.city ?: "Selecione uma cidade...",
-                        fontSize = 28.sp )
+
+
+                    val currentCity = viewModel.cities.find { it.name == viewModel.city }
+
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = viewModel.city ?: "Selecione uma cidade...",
+                            fontSize = 28.sp
+                        )
+
+
+                        currentCity?.let { city ->
+                            val icon = if (city.isMonitored) Icons.Filled.Notifications else Icons.Outlined.Notifications
+
+                            Spacer(modifier = Modifier.size(8.dp))
+                            Icon(
+                                imageVector = icon,
+                                contentDescription = "Monitorada?",
+                                modifier = Modifier.size(32.dp).clickable {
+                                    viewModel.update(city = city.copy(isMonitored = !city.isMonitored))
+                                }
+                            )
+                        }
+                    }
+
                     viewModel.city?.let { name ->
                         val weather = viewModel.weather(name)
                         Spacer(modifier = modifier.size(12.dp))
-                        Text( text = weather.desc ?: "...",
-                            fontSize = 22.sp )
+                        Text(
+                            text = weather.desc ?: "...",
+                            fontSize = 22.sp
+                        )
                         Spacer(modifier = modifier.size(12.dp))
-                        Text( text = "Temp: " + weather.temp + "℃",
-                            fontSize = 22.sp )
+                        Text(
+                            text = "Temp: " + weather.temp + "℃",
+                            fontSize = 22.sp
+                        )
                     }
                 }
             }
@@ -83,6 +112,7 @@ fun HomePage(modifier: Modifier = Modifier,viewModel: MainViewModel) {
         }
     }
 }
+
 @Composable
 fun ForecastItem(
     forecast: Forecast,
@@ -93,11 +123,13 @@ fun ForecastItem(
     val tempMin = format.format(forecast.tempMin)
     val tempMax = format.format(forecast.tempMax)
     Row(
-        modifier = modifier.fillMaxWidth().padding(12.dp)
-            .clickable( onClick = { onClick(forecast) }),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(12.dp)
+            .clickable(onClick = { onClick(forecast) }),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        AsyncImage( // Substitui o Icon
+        AsyncImage(
             model = forecast.imgUrl,
             modifier = modifier.size(70.dp),
             error = painterResource(id = R.drawable.loading),
@@ -115,6 +147,3 @@ fun ForecastItem(
         }
     }
 }
-
-
-
