@@ -15,10 +15,11 @@ import com.example.weatherapp.model.City
 import com.example.weatherapp.model.Forecast
 import com.example.weatherapp.model.User
 import com.example.weatherapp.model.Weather
+import com.example.weatherapp.monitor.ForecastMonitor
 import com.example.weatherapp.ui.nav.Route
 import com.google.android.gms.maps.model.LatLng
 
-class MainViewModel (private val db: FBDatabase, private val service: WeatherService): ViewModel(),
+class MainViewModel (private val db: FBDatabase, private val service: WeatherService, private val monitor: ForecastMonitor): ViewModel(),
     FBDatabase.Listener {
 
 
@@ -117,23 +118,27 @@ class MainViewModel (private val db: FBDatabase, private val service: WeatherSer
     }
 
     override fun onUserSignOut() {
-
         _cities.clear()
         _weather.clear()
         _user.value = null
+        monitor.cancelAll() // <-- ADICIONE ESTA LINHA
     }
 
-
     override fun onCityAdded(city: FBCity) {
-        _cities[city.name!!] = city.toCity()!!
+        val cityObj = city.toCity()!!
+        _cities[city.name!!] = cityObj
+        monitor.updateCity(cityObj) // <-- ADICIONE ESTA LINHA
     }
 
     override fun onCityUpdated(city: FBCity) {
+        val cityObj = city.toCity()!!
         _cities.remove(city.name)
-        _cities[city.name!!] = city.toCity()!!
+        _cities[city.name!!] = cityObj
+        monitor.updateCity(cityObj) // <-- ADICIONE ESTA LINHA
     }
 
     override fun onCityRemoved(city: FBCity) {
-        _cities.remove(city.name)
+        val cityObj = _cities[city.name]?.also { _cities.remove(city.name) }
+        cityObj?.let { monitor.cancelCity(it) } // <-- ADICIONE ESTA LINHA
     }
 }

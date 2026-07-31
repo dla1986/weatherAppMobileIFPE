@@ -12,20 +12,22 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.core.util.Consumer // ATENÇÃO: Import do Consumer do pacote androidx.core.util
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.weatherapp.api.WeatherService
+import com.example.weatherapp.db.fb.FBDatabase
+import com.example.weatherapp.monitor.ForecastMonitor
+import com.example.weatherapp.ui.CityDialog
 import com.example.weatherapp.ui.nav.BottomNavBar
 import com.example.weatherapp.ui.nav.BottomNavItem
 import com.example.weatherapp.ui.nav.MainNavHost
-import com.example.weatherapp.ui.theme.WeatherAPPTheme
-import androidx.compose.runtime.*
-import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.weatherapp.ui.CityDialog
 import com.example.weatherapp.ui.nav.Route
-import androidx.navigation.NavDestination.Companion.hasRoute
-import com.example.weatherapp.api.WeatherService
-import com.example.weatherapp.db.fb.FBDatabase
+import com.example.weatherapp.ui.theme.WeatherAPPTheme
 import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,9 +39,20 @@ class MainActivity : ComponentActivity() {
 
             val fbDB = remember { FBDatabase() }
             val weatherService = remember { WeatherService(this) }
+            val monitor = ForecastMonitor(this)
             val viewModel : MainViewModel = viewModel(
-                factory = MainViewModelFactory(fbDB, weatherService)
+                factory = MainViewModelFactory(fbDB, weatherService, monitor)
             )
+
+            // Passo 6: Tratador de Intent para a notificação
+            DisposableEffect(Unit) {
+                val listener = Consumer<android.content.Intent> { intent ->
+                    viewModel.city = intent.getStringExtra("city")
+                    viewModel.page = Route.Home
+                }
+                addOnNewIntentListener(listener)
+                onDispose { removeOnNewIntentListener(listener) }
+            }
 
             val navController = rememberNavController()
             var showDialog by remember { mutableStateOf(false) }
@@ -92,7 +105,6 @@ class MainActivity : ComponentActivity() {
                             BottomNavItem.MapButton
                         )
 
-
                         BottomNavBar(
                             viewModel = viewModel,
                             navController = navController,
@@ -117,10 +129,8 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-
                 LaunchedEffect(viewModel.page) {
                     navController.navigate(viewModel.page) {
-
                         navController.graph.startDestinationRoute?.let { route ->
                             popUpTo(route) {
                                 saveState = true
